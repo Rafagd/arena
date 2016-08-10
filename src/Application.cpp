@@ -5,6 +5,7 @@
 #include<string>
 #include<sstream>
 #include<nlohmann/json.hpp>
+
 #include<SFML/Graphics.hpp>
 
 #include "FightState.hpp"
@@ -34,11 +35,15 @@ Application::~Application()
     delete config;
 }
 
+#include<iostream>
+
 void Application::pre_load()
 {
     window = new sf::RenderWindow(sf::VideoMode(800, 600), "Arena de Desafios");
-    window.setFramerateLimit(60);
-    window.setKeyRepeatEnabled(false);
+    window->setFramerateLimit(60);
+    window->setKeyRepeatEnabled(false);
+
+    state = new FightState();
 
     draw(0);
 }
@@ -47,15 +52,15 @@ void Application::input(unsigned int frame)
 {
     sf::Event event;
 
-    while (window.pollEvents(event)) {
+    while (window->pollEvent(event)) {
 
         switch (event.type) {
             case sf::Event::Closed:
-                window.close();
+                window->close();
                 break;
 
             case sf::Event::KeyPressed:
-                state.input(frame, &event);
+                state->input(frame, event);
                 break;
         }
     }
@@ -63,14 +68,14 @@ void Application::input(unsigned int frame)
 
 void Application::update(unsigned int frame)
 {
-    state.update(frame);
+    state->update(frame);
 }
 
 void Application::draw(unsigned int frame)
 {
-    window.clear(sf::Color::Black);
-    state.draw(frame, window);
-    window.display();
+    window->clear(sf::Color::Black);
+    state->draw(frame, window);
+    window->display();
 }
 
 void Application::run()
@@ -79,14 +84,14 @@ void Application::run()
     
     state = new FightState();
 
-    sf::Clock clock();
+    sf::Clock clock;
     float offset = clock.getElapsedTime().asSeconds() - ((int) clock.getElapsedTime().asSeconds());
 
     unsigned int frame;
     unsigned int last_frame = -1;
 
-    while (window.isOpen()) {
-        frame = (int) ((clock.getElapsedTime().asSeconds() - offset) / (1f / 60f));
+    while (window->isOpen()) {
+        frame = (int) ((clock.getElapsedTime().asSeconds() - offset) / (1.f / 60.f));
 
         input(frame);
 

@@ -8,7 +8,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 find_package(PkgConfig REQUIRED)
 
 pkg_search_module(SFML REQUIRED
-    sfml-system sfml-window sfml-graphics sfml-network sfml-audio)
+    sfml-graphics
+    sfml-window
+    sfml-system
+)
 
 include_directories("include")
 include_directories(${SFML_INCLUDE_DIRS})
