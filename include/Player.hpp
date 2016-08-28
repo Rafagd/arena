@@ -1,26 +1,27 @@
-#ifndef ARENA_FIGHT_STATE_HPP
-#define ARENA_FIGHT_STATE_HPP
+#ifndef ARENA_PLAYER_HPP
+#define ARENA_PLAYER_HPP
 
+#include<SFML/Graphics.hpp>
 #include<nlohmann/json.hpp>
 
-#include "GameState.hpp"
-#include "Player.hpp"
+#include<Character.hpp>
+#include<Input.hpp>
 
 using namespace nlohmann;
 
-class FightState : public GameState
+class Player
 {
     public:
-        FightState(json &config);
-        virtual ~FightState();
+        Player(Input *controller, Character *character);
+        virtual ~Player();
 
         void input(const unsigned int frame, const sf::Event &event);
         void update(const unsigned int frame);
         void draw(const unsigned int frame, sf::RenderWindow *window);
 
     private:
-        Player *player1;
-        Player *player2;
+        Input     *controller;
+        Character *character;
 };
 
 #endif

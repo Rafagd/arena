@@ -20,7 +20,7 @@ class Application
         GameState        *state;
         sf::RenderWindow *window;
 
-        json             *config;
+        json config;
 
         void pre_load();
 

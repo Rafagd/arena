@@ -18,7 +18,7 @@ Application::Application()
     window = NULL;
 
     std::ifstream stream("assets/config.json");
-    config = new json(stream);
+    config = json::parse(stream);
     stream.close();
 }
 
@@ -31,8 +31,6 @@ Application::~Application()
     if (window != NULL) {
         delete window;
     }
-
-    delete config;
 }
 
 #include<iostream>
@@ -43,7 +41,7 @@ void Application::pre_load()
     window->setFramerateLimit(60);
     window->setKeyRepeatEnabled(false);
 
-    state = new FightState();
+    state = new FightState(config);
 
     draw(0);
 }
@@ -82,8 +80,6 @@ void Application::run()
 {
     pre_load();
     
-    state = new FightState();
-
     sf::Clock clock;
     float offset = clock.getElapsedTime().asSeconds() - ((int) clock.getElapsedTime().asSeconds());
 
