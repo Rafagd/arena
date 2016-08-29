@@ -19,7 +19,11 @@ class KeyboardInput : public Input
 
     private:
         nlohmann::json   *bindings;
+        std::map<sf::Keyboard::Key, KeyType> mappings;
+
         std::vector<Key>  buffer;
+        int               buffer_offset = 0;
+        int               buffer_limit  = 30; // 500ms
 };
 
 #endif
