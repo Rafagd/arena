@@ -108,18 +108,27 @@ static sf::Keyboard::Key get_key(std::string key)
     if (key == "Pause") return sf::Keyboard::Key::Pause;
 }
 
+static void mapping_impl(
+    nlohmann::json &bindings,
+    std::map<sf::Keyboard::Key, KeyType> &mappings,
+    const char *bind, KeyType key, sf::Keyboard::Key def)
+{
+    auto b = bindings[bind];
+
+    if (b != nullptr) {
+        mappings[get_key(b)] = key;
+    } else {
+        mappings[def] = key;
+    }
+}
+
 KeyboardInput::KeyboardInput(nlohmann::json &bindings)
 {
     this->bindings = &bindings;
     
-    #define ki_mapping(bind, key, def) ({  \
-        auto b = bindings[bind];           \
-        if (b != nullptr) {                \
-            mappings[get_key(b)] = key;    \
-        } else {                           \
-            mappings[def] = key;           \
-        }                                  \
-    })
+    #define ki_mapping(bind, key, def) (                 \
+        mapping_impl(bindings, mappings, bind, key, def) \
+    )
 
     ki_mapping("up",         KeyType::UP,         sf::Keyboard::Key::W);
     ki_mapping("down",       KeyType::DOWN,       sf::Keyboard::Key::S);
@@ -141,7 +150,15 @@ KeyboardInput::~KeyboardInput()
 
 void KeyboardInput::check(const unsigned int frame, const sf::Event &event)
 {
-    std::cout << mappings[event.key.code] << std::endl;
+    KeyType key;
+
+    try {
+        key = mappings.at(event.key.code);
+    } catch (...) {
+        return;
+    }
+
+
 }
 
 Key KeyboardInput::last()
