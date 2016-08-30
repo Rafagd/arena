@@ -158,7 +158,31 @@ void KeyboardInput::check(const unsigned int frame, const sf::Event &event)
         return;
     }
 
+    Key last_key = last();
 
+    int valid_frame = frame - buffer_limit;
+
+    if (event.type == sf::Event::EventType::KeyPressed) {
+        if ((last_key.frame > valid_frame) && (last_key.key == key)) {
+            return;
+        }
+
+        buffer.push_back(Key(frame, key, -1));
+
+    } else {
+        int i = -1;
+
+        while (i >= -buffer.size()) {
+            auto current = buffer[i];
+
+            if (current.key == key) {
+                buffer[i].hold = frame - buffer[i].frame;
+                break;
+            }
+
+            i -= 1;
+        }
+    }
 }
 
 Key KeyboardInput::last()

@@ -29,6 +29,13 @@ class Key
             hold  = -1;
         }
 
+        Key(const int frame, KeyType key, int hold)
+        {
+            this->frame = frame;
+            this->key   = key;
+            this->hold  = hold;
+        }
+
         unsigned int frame;
         KeyType      key;
         int          hold;
